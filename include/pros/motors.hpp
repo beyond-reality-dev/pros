@@ -27,6 +27,11 @@
 
 #include "pros/motors.h"
 
+#define use_configuration	\
+	set_gearing(_gearset);	\
+	set_reversed(_reverse);	\
+	set_encoder_units(_encoder_units); \
+
 namespace pros {
 inline namespace v5 {
 
@@ -1348,6 +1353,9 @@ class Motor {
 
 	private:
 	const std::uint8_t _port;
+	mutable motor_gearset_e_t _gearset;
+	mutable bool _reverse;
+	mutable motor_encoder_units_e_t _encoder_units;
 };
 
 ///@}

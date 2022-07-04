@@ -19,48 +19,58 @@ using namespace pros::c;
 
 Motor::Motor(const std::uint8_t port, const motor_gearset_e_t gearset, const bool reverse,
              const motor_encoder_units_e_t encoder_units)
-    : _port(port) {
+    : _port(port), _gearset(gearset), _reverse(reverse), _encoder_units(encoder_units) {
 	set_gearing(gearset);
 	set_reversed(reverse);
 	set_encoder_units(encoder_units);
 }
 
-Motor::Motor(const std::uint8_t port, const motor_gearset_e_t gearset, const bool reverse) : _port(port) {
+Motor::Motor(const std::uint8_t port, const motor_gearset_e_t gearset, const bool reverse) 
+	: _port(port), _gearset(gearset), _reverse(reverse), _encoder_units(E_MOTOR_ENCODER_DEGREES) {
 	set_gearing(gearset);
 	set_reversed(reverse);
 }
 
-Motor::Motor(const std::uint8_t port, const motor_gearset_e_t gearset) : _port(port) {
+Motor::Motor(const std::uint8_t port, const motor_gearset_e_t gearset) 
+	: _port(port), _gearset(gearset), _reverse(false), _encoder_units(E_MOTOR_ENCODER_DEGREES) {
 	set_gearing(gearset);
 }
 
-Motor::Motor(const std::uint8_t port, const bool reverse) : _port(port) {
+Motor::Motor(const std::uint8_t port, const bool reverse) 
+	: _port(port), _gearset(E_MOTOR_GEARSET_36), _reverse(reverse), _encoder_units(E_MOTOR_ENCODER_DEGREES) {
 	set_reversed(reverse);
 }
 
-Motor::Motor(const std::uint8_t port) : _port(port) {}
+Motor::Motor(const std::uint8_t port) 
+	: _port(port), _gearset(E_MOTOR_GEARSET_36), _reverse(false), _encoder_units(E_MOTOR_ENCODER_DEGREES) {}
 
 std::int32_t Motor::operator=(std::int32_t voltage) const {
+	use_configuration;
 	return motor_move(_port, voltage);
 }
 
 std::int32_t Motor::move(std::int32_t voltage) const {
+	use_configuration;
 	return motor_move(_port, voltage);
 }
 
 std::int32_t Motor::move_absolute(const double position, const std::int32_t velocity) const {
+	use_configuration;
 	return motor_move_absolute(_port, position, velocity);
 }
 
 std::int32_t Motor::move_relative(const double position, const std::int32_t velocity) const {
+	use_configuration;
 	return motor_move_relative(_port, position, velocity);
 }
 
 std::int32_t Motor::move_velocity(const std::int32_t velocity) const {
+	use_configuration;
 	return motor_move_velocity(_port, velocity);
 }
 
 std::int32_t Motor::move_voltage(const std::int32_t voltage) const {
+	use_configuration;
 	return motor_move_voltage(_port, voltage);
 }
 
@@ -69,6 +79,7 @@ std::int32_t Motor::brake(void) const {
 }
 
 std::int32_t Motor::modify_profiled_velocity(const std::int32_t velocity) const {
+	use_configuration;
 	return motor_modify_profiled_velocity(_port, velocity);
 }
 
@@ -101,6 +112,7 @@ double Motor::get_efficiency(void) const {
 }
 
 motor_encoder_units_e_t Motor::get_encoder_units(void) const {
+	set_encoder_units(_encoder_units);
 	return motor_get_encoder_units(_port);
 }
 
@@ -113,6 +125,7 @@ std::uint32_t Motor::get_flags(void) const {
 }
 
 motor_gearset_e_t Motor::get_gearing(void) const {
+	set_gearing(_gearset);
 	return motor_get_gearing(_port);
 }
 
@@ -147,6 +160,7 @@ std::int32_t Motor::get_zero_position_flag(void) const {
 }
 
 double Motor::get_position(void) const {
+	set_encoder_units(_encoder_units);
 	return motor_get_position(_port);
 }
 
@@ -155,6 +169,7 @@ double Motor::get_power(void) const {
 }
 
 std::int32_t Motor::is_reversed(void) const {
+	set_reversed(_reverse);
 	return motor_is_reversed(_port);
 }
 
@@ -163,6 +178,7 @@ double Motor::get_temperature(void) const {
 }
 
 double Motor::get_target_position(void) const {
+	set_encoder_units(_encoder_units);
 	return motor_get_target_position(_port);
 }
 
@@ -199,11 +215,13 @@ std::int32_t Motor::set_current_limit(const std::int32_t limit) const {
 }
 
 std::int32_t Motor::set_encoder_units(const motor_encoder_units_e_t units) const {
-	return motor_set_encoder_units(_port, units);
+	_encoder_units = units;
+	return set_encoder_units(_encoder_units);
 }
 
 std::int32_t Motor::set_gearing(const motor_gearset_e_t gearset) const {
-	return motor_set_gearing(_port, gearset);
+	_gearset = gearset;
+	return motor_set_gearing(_port, _gearset);
 }
 
 motor_pid_s_t Motor::convert_pid(double kf, double kp, double ki, double kd) {
@@ -254,7 +272,8 @@ std::int32_t Motor::set_zero_position(const double position) const {
 }
 
 std::int32_t Motor::set_reversed(const bool reverse) const {
-	return motor_set_reversed(_port, reverse);
+	_reverse = reverse;
+	return motor_set_reversed(_port, _reverse);
 }
 
 std::int32_t Motor::set_voltage_limit(const std::int32_t limit) const {
