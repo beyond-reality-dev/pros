@@ -36,7 +36,7 @@
     motor_encoder_units_e_t _temp_encoder_units = motor_get_encoder_units(_port); \
     motor_set_gearing(_port, _gearset);       \
 	motor_set_reversed(_port, _reverse);      \
-	motor_set_encoder_units(_port, _gearset); \
+	motor_set_encoder_units(_port, _temp_encoder_units); \
 
 #define pop_configuration \
 	motor_set_gearing(_port, _temp_gearset);       \
