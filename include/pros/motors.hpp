@@ -34,14 +34,14 @@
     motor_gearset_e_t _temp_gearset = motor_get_gearing(_port); \
     bool _temp_reverse = motor_is_reversed(_port);              \
     motor_encoder_units_e_t _temp_encoder_units = motor_get_encoder_units(_port); \
-    motor_set_gearing(_gearset);       \
-	motor_set_reversed(_reverse);      \
-	motor_set_encoder_units(_gearset); \
+    motor_set_gearing(_port, _gearset);       \
+	motor_set_reversed(_port, _reverse);      \
+	motor_set_encoder_units(_port, _gearset); \
 
 #define pop_configuration \
-	motor_set_gearing(_temp_gearset);       \
-	motor_set_reversed(_temp_reverse);      \
-	motor_set_encoder_units(_temp_encoder_units); \
+	motor_set_gearing(_port, _temp_gearset);       \
+	motor_set_reversed(_port, _temp_reverse);      \
+	motor_set_encoder_units(_port, _temp_encoder_units); \
     c::mutex_give(_mutex);
 
 namespace pros {
