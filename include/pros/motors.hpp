@@ -30,18 +30,18 @@
 
 /* NOTE: These may need to be changed from PROS to VEX calls */
 #define push_configuration \
-    c::mutex_take(_mutex, TIMEOUT_MAX); \
-    motor_gearset_e_t _temp_gearset = get_gearing(_port); \
-    bool _temp_reverse = is_reversed(_port);              \
-    motor_encoder_units_e_t _temp_encoder_units = get_encoder_units(_port); \
-    set_gearing(_gearset);       \
-	set_reversed(_reverse);      \
-	set_encoder_units(_gearset); \
+    c::mutex_take(_mutex, TIMEOUT_MAX);  \
+    motor_gearset_e_t _temp_gearset = motor_get_gearing(_port); \
+    bool _temp_reverse = motor_is_reversed(_port);              \
+    motor_encoder_units_e_t _temp_encoder_units = motor_get_encoder_units(_port); \
+    motor_set_gearing(_gearset);       \
+	motor_set_reversed(_reverse);      \
+	motor_set_encoder_units(_gearset); \
 
 #define pop_configuration \
-	set_gearing(_temp_gearset);       \
-	set_reversed(_temp_reverse);      \
-	set_encoder_units(_temp_gearset); \
+	motor_set_gearing(_temp_gearset);       \
+	motor_set_reversed(_temp_reverse);      \
+	motor_set_encoder_units(_temp_encoder_units); \
     c::mutex_give(_mutex);
 
 namespace pros {
