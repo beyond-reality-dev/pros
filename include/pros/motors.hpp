@@ -26,11 +26,23 @@
 #include <cstdint>
 
 #include "pros/motors.h"
+#include "rtos.h"
 
-#define use_configuration	\
-	set_gearing(_gearset);	\
-	set_reversed(_reverse);	\
-	set_encoder_units(_encoder_units); \
+/* NOTE: These may need to be changed from PROS to VEX calls */
+#define push_configuration \
+    c::mutex_take(_mutex, TIMEOUT_MAX); \
+    motor_gearset_e_t _temp_gearset = get_gearing(_port); \
+    bool _temp_reverse = is_reversed(_port);              \
+    motor_encoder_units_e_t _temp_encoder_units = get_encoder_units(_port); \
+    set_gearing(_gearset);       \
+	set_reversed(_reverse);      \
+	set_encoder_units(_gearset); \
+
+#define pop_configuration \
+	set_gearing(_temp_gearset);       \
+	set_reversed(_temp_reverse);      \
+	set_encoder_units(_temp_gearset); \
+    c::mutex_give(_mutex);
 
 namespace pros {
 inline namespace v5 {
@@ -1356,6 +1368,7 @@ class Motor {
 	mutable motor_gearset_e_t _gearset;
 	mutable bool _reverse;
 	mutable motor_encoder_units_e_t _encoder_units;
+    mutable mutex_t _mutex = c::mutex_create();
 };
 
 ///@}

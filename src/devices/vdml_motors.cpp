@@ -25,53 +25,65 @@ Motor::Motor(const std::uint8_t port, const motor_gearset_e_t gearset, const boo
 	set_encoder_units(encoder_units);
 }
 
-Motor::Motor(const std::uint8_t port, const motor_gearset_e_t gearset, const bool reverse) 
+Motor::Motor(const std::uint8_t port, const motor_gearset_e_t gearset, const bool reverse)
 	: _port(port), _gearset(gearset), _reverse(reverse), _encoder_units(E_MOTOR_ENCODER_DEGREES) {
 	set_gearing(gearset);
 	set_reversed(reverse);
 }
 
-Motor::Motor(const std::uint8_t port, const motor_gearset_e_t gearset) 
+Motor::Motor(const std::uint8_t port, const motor_gearset_e_t gearset)
 	: _port(port), _gearset(gearset), _reverse(false), _encoder_units(E_MOTOR_ENCODER_DEGREES) {
 	set_gearing(gearset);
 }
 
-Motor::Motor(const std::uint8_t port, const bool reverse) 
+Motor::Motor(const std::uint8_t port, const bool reverse)
 	: _port(port), _gearset(E_MOTOR_GEARSET_36), _reverse(reverse), _encoder_units(E_MOTOR_ENCODER_DEGREES) {
 	set_reversed(reverse);
 }
 
-Motor::Motor(const std::uint8_t port) 
+Motor::Motor(const std::uint8_t port)
 	: _port(port), _gearset(E_MOTOR_GEARSET_36), _reverse(false), _encoder_units(E_MOTOR_ENCODER_DEGREES) {}
 
 std::int32_t Motor::operator=(std::int32_t voltage) const {
-	use_configuration;
-	return motor_move(_port, voltage);
+    push_configuration;
+    std::int32_t rv = motor_move(_port, voltage);
+    pop_configuration;
+    return rv;
 }
 
 std::int32_t Motor::move(std::int32_t voltage) const {
-	use_configuration;
-	return motor_move(_port, voltage);
+    push_configuration;
+    std::int32_t rv = motor_move(_port, voltage);
+    pop_configuration;
+	return rv;
 }
 
 std::int32_t Motor::move_absolute(const double position, const std::int32_t velocity) const {
-	use_configuration;
-	return motor_move_absolute(_port, position, velocity);
+	push_configuration;
+    std::int32_t rv = motor_move_absolute(_port, position, velocity);
+    pop_configuration;
+    return rv;
 }
 
 std::int32_t Motor::move_relative(const double position, const std::int32_t velocity) const {
-	use_configuration;
-	return motor_move_relative(_port, position, velocity);
+	push_configuration;
+    std::int32_t rv = motor_move_relative(_port, position, velocity);
+    pop_configuration;
+    return rv;
 }
 
 std::int32_t Motor::move_velocity(const std::int32_t velocity) const {
-	use_configuration;
-	return motor_move_velocity(_port, velocity);
+	push_configuration;
+    std::int32_t rv = motor_move_velocity(_port, velocity);
+    pop_configuration;
+    return rv;
 }
 
 std::int32_t Motor::move_voltage(const std::int32_t voltage) const {
-	use_configuration;
-	return motor_move_voltage(_port, voltage);
+    push_configuration;
+    std::int32_t rv = motor_move_voltage(_port, voltage);
+    pop_configuration;
+    return rv;
 }
 
 std::int32_t Motor::brake(void) const {
@@ -79,8 +91,10 @@ std::int32_t Motor::brake(void) const {
 }
 
 std::int32_t Motor::modify_profiled_velocity(const std::int32_t velocity) const {
-	use_configuration;
-	return motor_modify_profiled_velocity(_port, velocity);
+	push_configuration;
+    std::int32_t rv = motor_modify_profiled_velocity(_port, velocity);
+	pop_configuration;
+    return rv;
 }
 
 double Motor::get_actual_velocity(void) const {
