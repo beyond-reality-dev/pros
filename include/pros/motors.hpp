@@ -28,21 +28,24 @@
 #include "pros/motors.h"
 #include "rtos.h"
 
-/* NOTE: These may need to be changed from PROS to VEX calls */
-#define push_configuration \
-    c::mutex_take(_mutex, TIMEOUT_MAX);  \
-    motor_gearset_e_t _temp_gearset = motor_get_gearing(_port); \
-    bool _temp_reverse = motor_is_reversed(_port);              \
-    motor_encoder_units_e_t _temp_encoder_units = motor_get_encoder_units(_port); \
-    motor_set_gearing(_port, _gearset);       \
-	motor_set_reversed(_port, _reverse);      \
-	motor_set_encoder_units(_port, _temp_encoder_units); \
+#define push_configuration                                                                            \
+    pros::c::mutex_take(_motor_mutex, TIMEOUT_MAX);                                                         \
+    claim_port_i(_port, E_DEVICE_MOTOR);                                                              \
+    motor_gearset_e_t _temp_gearset = vexDeviceMotorGearingGet(device->device_info);                  \
+    bool _temp_reverse = vexDeviceMotorReverseFlagGet(device->device_info);                           \
+    motor_encoder_units_e_t _temp_encoder_units = vexDeviceMotorEncoderUnitsGet(device->device_info); \
+	vexDeviceMotorGearingSet(device->device_info, (V5MotorGearset)_gearset);                          \
+	vexDeviceMotorReverseFlagSet(device->device_info, _reverse);                                      \
+	vexDeviceMotorEncoderUnitsSet(device->device_info, (V5MotorEncoderUnits)_encoder_units);          \
+    return_port(_port, 1);                                                                            \
 
-#define pop_configuration \
-	motor_set_gearing(_port, _temp_gearset);       \
-	motor_set_reversed(_port, _temp_reverse);      \
-	motor_set_encoder_units(_port, _temp_encoder_units); \
-    c::mutex_give(_mutex);
+#define pop_configuration                                                                         \
+    claim_port_i(_port, E_DEVICE_MOTOR);                                                          \
+	vexDeviceMotorGearingSet(device->device_info, (V5MotorGearset)_temp_gearset);                 \
+	vexDeviceMotorReverseFlagSet(device->device_info, _temp_reverse);                             \
+	vexDeviceMotorEncoderUnitsSet(device->device_info, (V5MotorEncoderUnits)_temp_encoder_units); \
+    return_port(_port, 1);                                                                        \
+    pros::c::mutex_give(_motor_mutex);                                                                  \
 
 namespace pros {
 inline namespace v5 {
@@ -1368,7 +1371,7 @@ class Motor {
 	mutable motor_gearset_e_t _gearset;
 	mutable bool _reverse;
 	mutable motor_encoder_units_e_t _encoder_units;
-    mutable mutex_t _mutex = c::mutex_create();
+    mutable mutex_t _motor_mutex = pros::c::mutex_create();
 };
 
 ///@}
