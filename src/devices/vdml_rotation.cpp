@@ -16,6 +16,7 @@ namespace pros {
 inline namespace v5 {
 
 Rotation::Rotation(const std::uint8_t port, const bool reverse_flag) : _port(port) {
+    _reverse_flag = reverse_flag;
 	pros::c::rotation_init_reverse(port, reverse_flag);
 }
 

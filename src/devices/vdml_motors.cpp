@@ -150,10 +150,7 @@ double Motor::get_efficiency(void) const {
 }
 
 motor_encoder_units_e_t Motor::get_encoder_units(void) const {
-    push_configuration;
-    std::int32_t rtn = motor_get_encoder_units(_port);
-    pop_configuration;
-    return rtn;
+    return _encoder_units;
 }
 
 std::uint32_t Motor::get_faults(void) const {
@@ -171,10 +168,7 @@ std::uint32_t Motor::get_flags(void) const {
 }
 
 motor_gearset_e_t Motor::get_gearing(void) const {
-    push_configuration;
-    motor_gearset_e_t rtn = motor_get_gearing(_port);
-    pop_configuration;
-	return rtn;
+	return _gearset;
 }
 
 motor_pid_full_s_t Motor::get_pos_pid(void) const {
@@ -240,10 +234,7 @@ double Motor::get_power(void) const {
 }
 
 std::int32_t Motor::is_reversed(void) const {
-    push_configuration;
-    std::int32_t rtn = motor_is_reversed(_port);
-    pop_configuration;
-	return rtn;
+	return _reverse;
 }
 
 double Motor::get_temperature(void) const {
