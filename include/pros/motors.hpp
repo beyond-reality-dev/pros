@@ -29,7 +29,7 @@
 #include "rtos.h"
 
 #define push_configuration                                                                            \
-    pros::c::mutex_take(_motor_mutex, TIMEOUT_MAX);                                                         \
+    pros::c::mutex_take(_motor_mutex, TIMEOUT_MAX);                                                   \
     claim_port_i(_port, E_DEVICE_MOTOR);                                                              \
     motor_gearset_e_t _temp_gearset = vexDeviceMotorGearingGet(device->device_info);                  \
     bool _temp_reverse = vexDeviceMotorReverseFlagGet(device->device_info);                           \
@@ -45,7 +45,7 @@
 	vexDeviceMotorReverseFlagSet(device->device_info, _temp_reverse);                             \
 	vexDeviceMotorEncoderUnitsSet(device->device_info, (V5MotorEncoderUnits)_temp_encoder_units); \
     return_port(_port, 1);                                                                        \
-    pros::c::mutex_give(_motor_mutex);                                                                  \
+    pros::c::mutex_give(_motor_mutex);                                                            \
 
 namespace pros {
 inline namespace v5 {

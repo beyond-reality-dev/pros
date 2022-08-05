@@ -87,7 +87,10 @@ std::int32_t Motor::move_voltage(const std::int32_t voltage) const {
 }
 
 std::int32_t Motor::brake(void) const {
-	return motor_brake(_port);
+    push_configuration;
+    std::int32_t rtn = motor_brake(_port);
+    pop_configuration;
+    return rtn;
 }
 
 std::int32_t Motor::modify_profiled_velocity(const std::int32_t velocity) const {
@@ -98,44 +101,73 @@ std::int32_t Motor::modify_profiled_velocity(const std::int32_t velocity) const 
 }
 
 double Motor::get_actual_velocity(void) const {
-	return motor_get_actual_velocity(_port);
+    push_configuration;
+    std::int32_t rtn = motor_get_actual_velocity(_port);
+    pop_configuration;
+    return rtn;
 }
 
 motor_brake_mode_e_t Motor::get_brake_mode(void) const {
-	return motor_get_brake_mode(_port);
+    push_configuration;
+    std::int32_t rtn = motor_get_brake_mode(_port);
+    pop_configuration;
+    return rtn;
 }
 
 std::int32_t Motor::get_current_draw(void) const {
-	return motor_get_current_draw(_port);
+    push_configuration;
+    std::int32_t rtn = motor_get_current_draw(_port);
+    pop_configuration;
+    return rtn;
 }
 
 std::int32_t Motor::get_current_limit(void) const {
-	return motor_get_current_limit(_port);
+    push_configuration;
+    std::int32_t rtn = motor_get_current_limit(_port);
+    pop_configuration;
+    return rtn;
 }
 
 std::int32_t Motor::is_over_current(void) const {
-	return motor_is_over_current(_port);
+    push_configuration;
+    std::int32_t rtn = motor_is_over_current(_port);
+    pop_configuration;
+    return rtn;
 }
 
 std::int32_t Motor::get_direction(void) const {
-	return motor_get_direction(_port);
+    push_configuration;
+    std::int32_t rtn = motor_get_direction(_port);
+    pop_configuration;
+    return rtn;
 }
 
 double Motor::get_efficiency(void) const {
-	return motor_get_efficiency(_port);
+    push_configuration;
+    std::int32_t rtn = motor_get_efficiency(_port);
+    pop_configuration;
+    return rtn;
 }
 
 motor_encoder_units_e_t Motor::get_encoder_units(void) const {
-	set_encoder_units(_encoder_units);
-	return motor_get_encoder_units(_port);
+    push_configuration;
+    std::int32_t rtn = motor_get_encoder_units(_port);
+    pop_configuration;
+    return rtn;
 }
 
 std::uint32_t Motor::get_faults(void) const {
-	return motor_get_faults(_port);
+    push_configuration;
+    std::int32_t rtn = motor_get_faults(_port);
+    pop_configuration;
+    return rtn;
 }
 
 std::uint32_t Motor::get_flags(void) const {
-	return motor_get_flags(_port);
+    push_configuration;
+    std::int32_t rtn = motor_get_flags(_port);
+    pop_configuration;
+    return rtn;
 }
 
 motor_gearset_e_t Motor::get_gearing(void) const {
@@ -148,31 +180,49 @@ motor_gearset_e_t Motor::get_gearing(void) const {
 motor_pid_full_s_t Motor::get_pos_pid(void) const {
 	#pragma GCC diagnostic push
   	#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-	return motor_get_pos_pid(_port);
+    push_configuration;
+    std::int32_t rtn = motor_get_pos_pid(_port);
+    pop_configuration;
+    return rtn;
 	#pragma GCC diagnostic pop
 }
 
 motor_pid_full_s_t Motor::get_vel_pid(void) const {
 	#pragma GCC diagnostic push
   	#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-	return motor_get_vel_pid(_port);
+    push_configuration;
+    std::int32_t rtn = motor_get_vel_pid(_port);
+    pop_configuration;
+    return rtn;
 	#pragma GCC diagnostic pop
 }
 
 std::int32_t Motor::get_raw_position(std::uint32_t* const timestamp) const {
-	return motor_get_raw_position(_port, timestamp);
+    push_configuration;
+    std::int32_t rtn = motor_get_raw_position(_port);
+    pop_configuration;
+    return rtn;
 }
 
 std::int32_t Motor::is_over_temp(void) const {
-	return motor_is_over_temp(_port);
+    push_configuration;
+    std::int32_t rtn = motor_is_over_temp(_port);
+    pop_configuration;
+    return rtn;
 }
 
 std::int32_t Motor::is_stopped(void) const {
-	return motor_is_stopped(_port);
+    push_configuration;
+    std::int32_t rtn = motor_is_stopped(_port);
+    pop_configuration;
+    return rtn;
 }
 
 std::int32_t Motor::get_zero_position_flag(void) const {
-	return motor_get_zero_position_flag(_port);
+    push_configuration;
+    std::int32_t rtn = motor_get_zero_position_flag(_port);
+    pop_configuration;
+    return rtn;
 }
 
 double Motor::get_position(void) const {
@@ -183,7 +233,10 @@ double Motor::get_position(void) const {
 }
 
 double Motor::get_power(void) const {
-	return motor_get_power(_port);
+    push_configuration;
+    double rtn = motor_get_power(_port);
+    pop_configuration;
+	return rtn;
 }
 
 std::int32_t Motor::is_reversed(void) const {
@@ -194,7 +247,10 @@ std::int32_t Motor::is_reversed(void) const {
 }
 
 double Motor::get_temperature(void) const {
-	return motor_get_temperature(_port);
+    push_configuration;
+    double rtn = motor_get_temperature(_port);
+    pop_configuration;
+	return rtn;
 }
 
 double Motor::get_target_position(void) const {
@@ -205,19 +261,31 @@ double Motor::get_target_position(void) const {
 }
 
 double Motor::get_torque(void) const {
-	return motor_get_torque(_port);
+    push_configuration;
+    double rtn = motor_get_torque(_port);
+    pop_configuration;
+	return rtn;
 }
 
 std::int32_t Motor::get_target_velocity(void) const {
-	return motor_get_target_velocity(_port);
+    push_configuration;
+    std::int32_t rtn = motor_get_target_velocity(_port);
+    pop_configuration;
+    return rtn;
 }
 
 std::int32_t Motor::get_voltage(void) const {
-	return motor_get_voltage(_port);
+    push_configuration;
+    std::int32_t rtn = motor_get_voltage(_port);
+    pop_configuration;
+    return rtn;
 }
 
 std::int32_t Motor::get_voltage_limit(void) const {
-	return motor_get_voltage_limit(_port);
+    push_configuration;
+    std::int32_t rtn = motor_get_voltage_limit(_port);
+    pop_configuration;
+    return rtn;
 }
 
 std::uint8_t Motor::get_port(void) const {
@@ -225,15 +293,24 @@ std::uint8_t Motor::get_port(void) const {
 }
 
 std::int32_t Motor::tare_position(void) const {
-	return motor_tare_position(_port);
+    push_configuration;
+    std::int32_t rtn = motor_tare_position(_port);
+    pop_configuration;
+    return rtn;
 }
 
 std::int32_t Motor::set_brake_mode(const motor_brake_mode_e_t mode) const {
-	return motor_set_brake_mode(_port, mode);
+    push_configuration;
+    std::int32_t rtn = motor_set_brake_mode(_port);
+    pop_configuration;
+    return rtn;
 }
 
 std::int32_t Motor::set_current_limit(const std::int32_t limit) const {
-	return motor_set_current_limit(_port, limit);
+    push_configuration;
+    std::int32_t rtn = motor_set_current_limit(_port);
+    pop_configuration;
+    return rtn;
 }
 
 std::int32_t Motor::set_encoder_units(const motor_encoder_units_e_t units) const {
@@ -249,7 +326,10 @@ std::int32_t Motor::set_gearing(const motor_gearset_e_t gearset) const {
 motor_pid_s_t Motor::convert_pid(double kf, double kp, double ki, double kd) {
 	#pragma GCC diagnostic push
   	#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-	return motor_convert_pid(kf, kp, ki, kd);
+    push_configuration;
+    motor_pid_s_t rtn = motor_convert_pid(kf, kp, ki, kd);
+    pop_configuration;
+    return rtn;
 	#pragma GCC diagnostic pop
 }
 
@@ -257,40 +337,58 @@ motor_pid_full_s_t Motor::convert_pid_full(double kf, double kp, double ki, doub
                                            double threshold, double loopspeed) {
 	#pragma GCC diagnostic push
   	#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-	return motor_convert_pid_full(kf, kp, ki, kd, filter, limit, threshold, loopspeed);
+    push_configuration;
+    motor_pid_full_s_t rtn = motor_convert_pid_full(kf, kp, ki, kd, filter, limit, threshold, loopspeed);
+    pop_configuration;
+    return rtn;
 	#pragma GCC diagnostic pop
 }
 
 std::int32_t Motor::set_pos_pid(const motor_pid_s_t pid) const {
 	#pragma GCC diagnostic push
   	#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-	return motor_set_pos_pid(_port, pid);
+    push_configuration;
+    std::int32_t rtn = motor_set_pos_pid(_port, pid);
+    pop_configuration;
+    return rtn;
 	#pragma GCC diagnostic pop
 }
 
 std::int32_t Motor::set_pos_pid_full(const motor_pid_full_s_t pid) const {
 	#pragma GCC diagnostic push
   	#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-	return motor_set_pos_pid_full(_port, pid);
+    push_configuration;
+    std::int32_t rtn = motor_set_pos_pid_full(_port, pid);
+    pop_configuration;
+    return rtn;
 	#pragma GCC diagnostic pop
 }
 
 std::int32_t Motor::set_vel_pid(const motor_pid_s_t pid) const {
 	#pragma GCC diagnostic push
   	#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-	return motor_set_vel_pid(_port, pid);
+    push_configuration;
+    std::int32_t rtn = motor_set_vel_pid(_port, pid);
+    pop_configuration;
+    return rtn;
 	#pragma GCC diagnostic pop
 }
 
 std::int32_t Motor::set_vel_pid_full(const motor_pid_full_s_t pid) const {
 	#pragma GCC diagnostic push
   	#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-	return motor_set_vel_pid_full(_port, pid);
+    push_configuration;
+    std::int32_t rtn = motor_set_vel_pid_full(_port, pid);
+    pop_configuration;
+    return rtn;
 	#pragma GCC diagnostic pop
 }
 
 std::int32_t Motor::set_zero_position(const double position) const {
-	return motor_set_zero_position(_port, position);
+    push_configuration;
+    std::int32_t rtn = motor_set_zero_position(_port, position);
+    pop_configuration;
+    return rtn;
 }
 
 std::int32_t Motor::set_reversed(const bool reverse) const {
@@ -299,7 +397,10 @@ std::int32_t Motor::set_reversed(const bool reverse) const {
 }
 
 std::int32_t Motor::set_voltage_limit(const std::int32_t limit) const {
-	return motor_set_voltage_limit(_port, limit);
+    push_configuration;
+    std::int32_t rtn = motor_set_voltage_limit(_port, limit);
+    pop_configuration;
+    return rtn;
 }
 
 namespace literals {
