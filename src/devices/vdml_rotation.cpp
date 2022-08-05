@@ -14,49 +14,80 @@
 
 namespace pros {
 inline namespace v5 {
-    
+
 Rotation::Rotation(const std::uint8_t port, const bool reverse_flag) : _port(port) {
 	pros::c::rotation_init_reverse(port, reverse_flag);
 }
 
 std::int32_t Rotation::reset() {
-	return pros::c::rotation_reset(_port);
+    push_configuration;
+    std::int32_t rtn = pros::c::rotation_reset(_port);
+    pop_configuration;
+    return rtn;
 }
 
 std::int32_t Rotation::set_data_rate(std::uint32_t rate) const {
-	return pros::c::rotation_set_data_rate(_port, rate);
+    push_configuration;
+    std::int32_t rtn = pros::c::rotation_set_data_rate(_port, rate);
+    pop_configuration;
+    return rtn;
 }
 
 std::int32_t Rotation::set_position(std::uint32_t position) {
-	return pros::c::rotation_set_position(_port, position);
+    push_configuration;
+    std::int32_t rtn = pros::c::rotation_set_position(_port, position);
+    pop_configuration;
+    return rtn;
 }
 
 std::int32_t Rotation::reset_position(void) {
-	return pros::c::rotation_reset_position(_port);
+    push_configuration;
+    std::int32_t rtn = pros::c::rotation_reset_position(_port);
+    pop_configuration;
+    return rtn;
 }
 
 std::int32_t Rotation::get_position(void) {
-    return pros::c::rotation_get_position(_port);
+    push_configuration;
+    std::int32_t rtn = pros::c::rotation_get_position(_port);
+    pop_configuration;
+    return rtn;
 }
 
 std::int32_t Rotation::get_velocity(void) {
-    return pros::c::rotation_get_velocity(_port);
+    push_configuration;
+    std::int32_t rtn = pros::c::rotation_get_velocity(_port);
+    pop_configuration;
+    return rtn;
 }
 
 std::int32_t Rotation::get_angle(void) {
-    return pros::c::rotation_get_angle(_port);
+    push_configuration;
+    std::int32_t rtn = pros::c::rotation_get_angle(_port);
+    pop_configuration;
+    return rtn;
 }
 
 std::int32_t Rotation::set_reversed(bool value) {
-    return pros::c::rotation_set_reversed(_port, value);
+    _reverse_flag = value;
+    push_configuration;
+    std::int32_t rtn = pros::c::rotation_set_reversed(_port);
+    pop_configuration;
+    return rtn;
 }
 
 std::int32_t Rotation::reverse(void) {
-    return pros::c::rotation_reverse(_port);
+    push_configuration;
+    std::int32_t rtn = pros::c::rotation_reverse(_port);
+    pop_configuration;
+    return rtn;
 }
 
 std::int32_t Rotation::get_reversed(void) {
-    return pros::c::rotation_get_reversed(_port);
+    push_configuration;
+    std::int32_t rtn = pros::c::rotation_get_reverse(_port);
+    pop_configuration;
+    return rtn;
 }
 
 }
