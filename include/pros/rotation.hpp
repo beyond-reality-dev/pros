@@ -15,7 +15,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- * 
+ *
  * \defgroup cpp-rotation VEX Rotation Sensor C++ API
  */
 #ifndef _PROS_ROTATION_HPP_
@@ -23,21 +23,10 @@
 
 #include <cstdint>
 
+#include "kapi.h"
+#include "pros/apix.h"
 #include "pros/rotation.h"
 #include "rtos.h"
-
-#define push_configuration                                                                            \
-    pros::c::mutex_take(_rotation_mutex, TIMEOUT_MAX);                                                \
-    claim_port_i(_port, E_DEVICE_MOTOR);                                                              \
-    bool _temp_reverse_flag = vexDeviceMotorReverseFlagGet(device->device_info);                      \
-	vexDeviceMotorReverseFlagSet(device->device_info, _reverse_flag);                                 \
-    return_port(_port, 1);                                                                            \
-
-#define pop_configuration                                                                         \
-    claim_port_i(_port, E_DEVICE_MOTOR);                                                          \
-	vexDeviceMotorReverseFlagSet(device->device_info, _temp_reverse_flag);                        \
-    return_port(_port, 1);                                                                        \
-    pros::c::mutex_give(_rotation_mutex);                                                         \
 
 namespace pros {
 inline namespace v5 {
@@ -209,12 +198,12 @@ class Rotation {
 	 */
 	virtual std::int32_t get_reversed();
 	///@}
-    private:
+	private:
 	const std::uint8_t _port;
-    mutable bool _reverse_flag;
+	mutable bool _reverse_flag;
 	mutable mutex_t _rotation_mutex = pros::c::mutex_create();
 };
-}
+}  // namespace v5
 }  // namespace pros
 
 #endif

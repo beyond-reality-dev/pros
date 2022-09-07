@@ -18,6 +18,7 @@
 #include "vdml/vdml.h"
 
 #ifdef __cplusplus
+using pros::c::v5_device_e_t;
 extern "C" {
 #endif
 

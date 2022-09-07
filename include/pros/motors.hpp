@@ -25,27 +25,9 @@
 
 #include <cstdint>
 
+#include "kapi.h"
 #include "pros/motors.h"
 #include "rtos.h"
-
-#define push_configuration                                                                            \
-    pros::c::mutex_take(_motor_mutex, TIMEOUT_MAX);                                                   \
-    claim_port_i(_port, E_DEVICE_MOTOR);                                                              \
-    motor_gearset_e_t _temp_gearset = vexDeviceMotorGearingGet(device->device_info);                  \
-    bool _temp_reverse = vexDeviceMotorReverseFlagGet(device->device_info);                           \
-    motor_encoder_units_e_t _temp_encoder_units = vexDeviceMotorEncoderUnitsGet(device->device_info); \
-	vexDeviceMotorGearingSet(device->device_info, (V5MotorGearset)_gearset);                          \
-	vexDeviceMotorReverseFlagSet(device->device_info, _reverse);                                      \
-	vexDeviceMotorEncoderUnitsSet(device->device_info, (V5MotorEncoderUnits)_encoder_units);          \
-    return_port(_port, 1);                                                                            \
-
-#define pop_configuration                                                                         \
-    claim_port_i(_port, E_DEVICE_MOTOR);                                                          \
-	vexDeviceMotorGearingSet(device->device_info, (V5MotorGearset)_temp_gearset);                 \
-	vexDeviceMotorReverseFlagSet(device->device_info, _temp_reverse);                             \
-	vexDeviceMotorEncoderUnitsSet(device->device_info, (V5MotorEncoderUnits)_temp_encoder_units); \
-    return_port(_port, 1);                                                                        \
-    pros::c::mutex_give(_motor_mutex);                                                            \
 
 namespace pros {
 inline namespace v5 {
@@ -150,7 +132,7 @@ class Motor {
 	 *
 	 * \return 1 if the operation was successful or PROS_ERR if the operation
 	 * failed, setting errno.
-	 * 
+	 *
 	 * \b Example
 	 * \code
 	 * void opcontrol() {
@@ -186,7 +168,7 @@ class Motor {
 	 *
 	 * \return 1 if the operation was successful or PROS_ERR if the operation
 	 * failed, setting errno.
-	 * 
+	 *
 	 * \b Example
 	 * \code
 	 * void autonomous() {
@@ -232,7 +214,7 @@ class Motor {
 	 *
 	 * \return 1 if the operation was successful or PROS_ERR if the operation
 	 * failed, setting errno.
-	 * 
+	 *
 	 * \b Example
 	 * \code
 	 * void autonomous() {
@@ -270,7 +252,7 @@ class Motor {
 	 *
 	 * \return 1 if the operation was successful or PROS_ERR if the operation
 	 * failed, setting errno.
-	 * 
+	 *
 	 * \b Example
 	 * \code
 	 * void autonomous() {
@@ -297,7 +279,7 @@ class Motor {
 	 *
 	 * \return 1 if the operation was successful or PROS_ERR if the operation
 	 * failed, setting errno.
-	 * 
+	 *
 	 * \b Example
 	 * \code
 	 * void autonomous() {
@@ -341,7 +323,7 @@ class Motor {
 	 *
 	 * \return 1 if the operation was successful or PROS_ERR if the operation
 	 * failed, setting errno.
-	 * 
+	 *
 	 * \b Example
 	 * \code
 	 * void autonomous() {
@@ -350,7 +332,7 @@ class Motor {
 	 *   pros::delay(100);
 	 *   motor.modify_profiled_velocity(1, 0); // Stop the motor early
 	 * }
-	 * \endcode 
+	 * \endcode
 	 */
 	virtual std::int32_t modify_profiled_velocity(const std::int32_t velocity) const;
 
@@ -363,7 +345,7 @@ class Motor {
 	 *
 	 * \return The target position in its encoder units or PROS_ERR_F if the
 	 * operation failed, setting errno.
-	 * 
+	 *
 	 * \b Example
 	 * \code
 	 * void autonomous() {
@@ -385,7 +367,7 @@ class Motor {
 	 *
 	 * \return The commanded motor velocity from +-100, +-200, or +-600, or
 	 * PROS_ERR if the operation failed, setting errno.
-	 * 
+	 *
 	 * \b Example
 	 * \code
 	 * void opcontrol() {
@@ -407,7 +389,7 @@ class Motor {
 	/// \name Motor telemetry functions
 	/// These functions allow programmers to collect telemetry from motors
 	///@{
-	
+
 	/**
 	 * Gets the actual velocity of the motor.
 	 *
@@ -417,7 +399,7 @@ class Motor {
 	 *
 	 * \return The motor's actual velocity in RPM or PROS_ERR_F if the operation
 	 * failed, setting errno.
-	 * 
+	 *
 	 * \b Example
 	 * \code
 	 * void opcontrol() {
@@ -441,7 +423,7 @@ class Motor {
 	 *
 	 * \return The motor's current in mA or PROS_ERR if the operation failed,
 	 * setting errno.
-	 * 
+	 *
 	 * \b Example
 	 * \code
 	 * void opcontrol() {
@@ -453,7 +435,7 @@ class Motor {
 	 *     pros::delay(2);
 	 *   }
 	 * }
-	 * \endcode 
+	 * \endcode
 	 */
 	virtual std::int32_t get_current_draw(void) const;
 
@@ -466,7 +448,7 @@ class Motor {
 	 *
 	 * \return 1 for moving in the positive direction, -1 for moving in the
 	 * negative direction, and PROS_ERR if the operation failed, setting errno.
-	 * 
+	 *
 	 * \b Example
 	 * \code
 	 * void opcontrol() {
@@ -495,7 +477,7 @@ class Motor {
 	 *
 	 * \return The motor's efficiency in percent or PROS_ERR_F if the operation
 	 * failed, setting errno.
-	 * 
+	 *
 	 * \b Example
 	 * \code
 	 * void opcontrol() {
@@ -524,7 +506,7 @@ class Motor {
 	 *        The V5 port number from 1-21
 	 *
 	 * \return A bitfield containing the motor's faults.
-	 * 
+	 *
 	 * \b Example
 	 * \code
 	 * void opcontrol() {
@@ -552,7 +534,7 @@ class Motor {
 	 *        The V5 port number from 1-21
 	 *
 	 * \return A bitfield containing the motor's flags.
-	 * 
+	 *
 	 * \b Example
 	 * \code
 	 * void opcontrol() {
@@ -577,9 +559,9 @@ class Motor {
 	 *
 	 * \return The motor's absolute position in its encoder units or PROS_ERR_F
 	 * if the operation failed, setting errno.
-	 * 
+	 *
 	 * \b Example
-	 * \code 
+	 * \code
 	 * void opcontrol() {
 	 *   pros::Motor motor (1);
 	 *   pros::Controller master (E_CONTROLLER_MASTER);
@@ -602,7 +584,7 @@ class Motor {
 	 *
 	 * \return The motor's power draw in Watts or PROS_ERR_F if the operation
 	 * failed, setting errno.
-	 * 
+	 *
 	 * \b Example
 	 * \code
 	 * void opcontrol() {
@@ -632,7 +614,7 @@ class Motor {
 	 *
 	 * \return The raw encoder count at the given timestamp or PROS_ERR if the
 	 * operation failed.
-	 * 
+	 *
 	 * \b Example
 	 * \code
 	 * void opcontrol() {
@@ -658,7 +640,7 @@ class Motor {
 	 *
 	 * \return The motor's temperature in degrees Celsius or PROS_ERR_F if the
 	 * operation failed, setting errno.
-	 * 
+	 *
 	 * \b Example
 	 * \code
 	 * void opcontrol() {
@@ -683,7 +665,7 @@ class Motor {
 	 *
 	 * \return The motor's torque in Nm or PROS_ERR_F if the operation failed,
 	 * setting errno.
-	 * 
+	 *
 	 * \b Example
 	 * \code
 	 * void opcontrol() {
@@ -708,7 +690,7 @@ class Motor {
 	 *
 	 * \return The motor's voltage in mV or PROS_ERR_F if the operation failed,
 	 * setting errno.
-	 * 
+	 *
 	 * \b Example
 	 * \code
 	 * void opcontrol() {
@@ -738,7 +720,7 @@ class Motor {
 	 * \return 1 if the motor is at zero absolute position, 0 if the motor has
 	 * moved from its absolute zero, or PROS_ERR if the operation failed, setting
 	 * errno
-	 * 
+	 *
 	 * \b Example
 	 * \code
 	 * void opcontrol() {
@@ -767,7 +749,7 @@ class Motor {
 	 *
 	 * \return 1 if the motor is not moving, 0 if the motor is moving, or PROS_ERR
 	 * if the operation failed, setting errno
-	 * 
+	 *
 	 * \b Example
 	 * \code
 	 * void opcontrol() {
@@ -793,7 +775,7 @@ class Motor {
 	 * \return 1 if the motor's current limit is being exceeded and 0 if the
 	 * current limit is not exceeded, or PROS_ERR if the operation failed, setting
 	 * errno.
-	 * 
+	 *
 	 * \b Example
 	 * \code
 	 * void opcontrol() {
@@ -818,7 +800,7 @@ class Motor {
 	 *
 	 * \return 1 if the temperature limit is exceeded and 0 if the temperature is
 	 * below the limit, or PROS_ERR if the operation failed, setting errno.
-	 * 
+	 *
 	 * \b Example
 	 * \code
 	 * void opcontrol() {
@@ -849,7 +831,7 @@ class Motor {
 	 *
 	 * \return One of motor_brake_mode_e_t, according to what was set for the
 	 * motor, or E_MOTOR_BRAKE_INVALID if the operation failed, setting errno.
-	 * 
+	 *
 	 * \b Example
 	 * \code
 	 * void initialize() {
@@ -872,7 +854,7 @@ class Motor {
 	 *
 	 * \return The motor's current limit in mA or PROS_ERR if the operation failed,
 	 * setting errno.
-	 * 
+	 *
 	 * \b Example
 	 * \code
 	 * void opcontrol() {
@@ -895,7 +877,7 @@ class Motor {
 	 *
 	 * \return One of motor_encoder_units_e_t according to what is set for the
 	 * motor or E_MOTOR_ENCODER_INVALID if the operation failed.
-	 * 
+	 *
 	 * \b Example
 	 * \code
 	 * void initialize() {
@@ -915,7 +897,7 @@ class Motor {
 	 *
 	 * \return One of motor_gearset_e_t according to what is set for the motor,
 	 * or E_GEARSET_INVALID if the operation failed.
-	 * 
+	 *
 	 * \b Example
 	 * \code
 	 * void initialize() {
@@ -930,7 +912,7 @@ class Motor {
 	 * Gets the port number of the motor.
 	 *
 	 * \return The motor's port number.
-	 * 
+	 *
 	 * \b Example
 	 * \code
 	 * void autonomous() {
@@ -953,7 +935,7 @@ class Motor {
 	 *
 	 * \return The motor's voltage limit in V or PROS_ERR if the operation failed,
 	 * setting errno.
-	 * 
+	 *
 	 * \b Example
 	 * \code
 	 * void initialize() {
@@ -973,7 +955,7 @@ class Motor {
 	 *
 	 * \return 1 if the motor has been reversed and 0 if the motor was not
 	 * reversed, or PROS_ERR if the operation failed, setting errno.
-	 * 
+	 *
 	 * \b Example
 	 * \code
 	 * void initialize() {
@@ -985,7 +967,7 @@ class Motor {
 	 */
 	virtual std::int32_t is_reversed(void) const;
 
-		/**
+	/**
 	 * Sets one of motor_brake_mode_e_t to the motor.
 	 *
 	 * This function uses the following values of errno when an error state is
@@ -997,7 +979,7 @@ class Motor {
 	 *
 	 * \return 1 if the operation was successful or PROS_ERR if the operation
 	 * failed, setting errno.
-	 * 
+	 *
 	 * \b Example
 	 * \code
 	 * void initialize() {
@@ -1021,13 +1003,13 @@ class Motor {
 	 *
 	 * \return 1 if the operation was successful or PROS_ERR if the operation
 	 * failed, setting errno.
-	 * 
+	 *
 	 * \b Example
 	 * \code
 	 * void opcontrol() {
 	 *   pros::Motor motor (1);
 	 *   pros::Controller master (E_CONTROLLER_MASTER);
-	 * 
+	 *
 	 * motor.set_current_limit(1000);
 	 * while (true) {
 	 *   motor = controller_get_analog(E_CONTROLLER_ANALOG_LEFT_Y);
@@ -1051,7 +1033,7 @@ class Motor {
 	 *
 	 * \return 1 if the operation was successful or PROS_ERR if the operation
 	 * failed, setting errno.
-	 * 
+	 *
 	 * \b Example
 	 * \code
 	 * void initialize() {
@@ -1075,7 +1057,7 @@ class Motor {
 	 *
 	 * \return 1 if the operation was successful or PROS_ERR if the operation
 	 * failed, setting errno.
-	 * 
+	 *
 	 * \b Example
 	 * \code
 	 * void initialize() {
@@ -1101,7 +1083,7 @@ class Motor {
 	 *
 	 * \return 1 if the operation was successful or PROS_ERR if the operation
 	 * failed, setting errno.
-	 * 
+	 *
 	 * \b Example
 	 * \code
 	 * void initialize() {
@@ -1125,13 +1107,13 @@ class Motor {
 	 *
 	 * \return 1 if the operation was successful or PROS_ERR if the operation
 	 * failed, setting errno.
-	 * 
+	 *
 	 * \b Example
 	 * \code
 	 * void autonomous() {
 	 *   pros::Motor motor (1);
 	 *   pros::Controller master (E_CONTROLLER_MASTER);
-	 * 
+	 *
 	 *   motor.set_voltage_limit(10000);
 	 *   while (true) {
 	 *     motor = master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y);
@@ -1158,19 +1140,19 @@ class Motor {
 	 *
 	 * \return 1 if the operation was successful or PROS_ERR if the operation
 	 * failed, setting errno.
-	 * 
+	 *
 	 * \b Example
 	 * \code
 	 * void autonomous() {
 	 *   pros::Motor motor (1);
 	 *   motor.move_absolute(100, 100); // Moves 100 units forward
 	 *   motor.move_absolute(100, 100); // This does not cause a movement
-	 * 
+	 *
 	 *   motor.set_zero_position(80);
 	 *   motor.move_absolute(100, 100); // Moves 80 units forward
 	 * }
 	 * \endcode
-	 * 
+	 *
 	 */
 	virtual std::int32_t set_zero_position(const double position) const;
 
@@ -1183,14 +1165,14 @@ class Motor {
 	 *
 	 * \return 1 if the operation was successful or PROS_ERR if the operation
 	 * failed, setting errno.
-	 * 
+	 *
 	 * \b Example
 	 * \code
 	 * void autonomous() {
 	 *   pros::Motor motor (1);
 	 *   motor.move_absolute(100, 100); // Moves 100 units forward
 	 *   motor.move_absolute(100, 100); // This does not cause a movement
-	 * 
+	 *
 	 *   motor.tare_position();
 	 *   motor.move_absolute(100, 100); // Moves 100 units forward
 	 * }
@@ -1213,8 +1195,10 @@ class Motor {
 	 * \return A motor_pid_full_s_t containing the position PID constants last set
 	 * to the given motor
 	 */
-	[[deprecated("Changing these values is not supported by VEX and may lead to permanent motor damage.")]] 
-	virtual motor_pid_full_s_t get_pos_pid(void) const;
+	[[deprecated(
+	    "Changing these values is not supported by VEX and may lead to permanent motor "
+	    "damage.")]] virtual motor_pid_full_s_t
+	get_pos_pid(void) const;
 
 	/**
 	 * Gets the velocity PID that was set for the motor. This function will return
@@ -1231,8 +1215,10 @@ class Motor {
 	 * \return A motor_pid_full_s_t containing the velocity PID constants last set
 	 * to the given motor
 	 */
-	[[deprecated("Changing these values is not supported by VEX and may lead to permanent motor damage.")]]
-	virtual motor_pid_full_s_t get_vel_pid(void) const;
+	[[deprecated(
+	    "Changing these values is not supported by VEX and may lead to permanent motor "
+	    "damage.")]] virtual motor_pid_full_s_t
+	get_vel_pid(void) const;
 
 	/**
 	 * Takes in floating point values and returns a properly formatted pid struct.
@@ -1252,8 +1238,9 @@ class Motor {
 	 *
 	 * \return A motor_pid_s_t struct formatted properly in 4.4.
 	 */
-	[[deprecated("Changing these values is not supported by VEX and may lead to permanent motor damage.")]]
-	static motor_pid_s_t convert_pid(double kf, double kp, double ki, double kd);
+	[[deprecated(
+	    "Changing these values is not supported by VEX and may lead to permanent motor damage.")]] static motor_pid_s_t
+	convert_pid(double kf, double kp, double ki, double kd);
 
 	/**
 	 * Takes in floating point values and returns a properly formatted pid struct.
@@ -1282,8 +1269,10 @@ class Motor {
 	 *
 	 * \return A motor_pid_s_t struct formatted properly in 4.4.
 	 */
-	[[deprecated("Changing these values is not supported by VEX and may lead to permanent motor damage.")]] 
-	static motor_pid_full_s_t convert_pid_full(double kf, double kp, double ki, double kd, double filter, double limit, double threshold,
+	[[deprecated(
+	    "Changing these values is not supported by VEX and may lead to permanent motor "
+	    "damage.")]] static motor_pid_full_s_t
+	convert_pid_full(double kf, double kp, double ki, double kd, double filter, double limit, double threshold,
 	                 double loopspeed);
 
 	/**
@@ -1303,8 +1292,9 @@ class Motor {
 	 * \return 1 if the operation was successful or PROS_ERR if the operation
 	 * failed, setting errno.
 	 */
-	[[deprecated("Changing these values is not supported by VEX and may lead to permanent motor damage.")]]
-	virtual std::int32_t set_pos_pid(const motor_pid_s_t pid) const;
+	[[deprecated(
+	    "Changing these values is not supported by VEX and may lead to permanent motor damage.")]] virtual std::int32_t
+	set_pos_pid(const motor_pid_s_t pid) const;
 
 	/**
 	 * Sets one of motor_pid_full_s_t for the motor.
@@ -1322,8 +1312,9 @@ class Motor {
 	 * \return 1 if the operation was successful or PROS_ERR if the operation
 	 * failed, setting errno.
 	 */
-	[[deprecated("Changing these values is not supported by VEX and may lead to permanent motor damage.")]] 
-	virtual std::int32_t set_pos_pid_full(const motor_pid_full_s_t pid) const;
+	[[deprecated(
+	    "Changing these values is not supported by VEX and may lead to permanent motor damage.")]] virtual std::int32_t
+	set_pos_pid_full(const motor_pid_full_s_t pid) const;
 
 	/**
 	 * Sets one of motor_pid_s_t for the motor. This intended to just modify the
@@ -1342,8 +1333,9 @@ class Motor {
 	 * \return 1 if the operation was successful or PROS_ERR if the operation
 	 * failed, setting errno.
 	 */
-	[[deprecated("Changing these values is not supported by VEX and may lead to permanent motor damage.")]] 
-	virtual std::int32_t set_vel_pid(const motor_pid_s_t pid) const;
+	[[deprecated(
+	    "Changing these values is not supported by VEX and may lead to permanent motor damage.")]] virtual std::int32_t
+	set_vel_pid(const motor_pid_s_t pid) const;
 
 	/**
 	 * Sets one of motor_pid_full_s_t for the motor.
@@ -1361,8 +1353,9 @@ class Motor {
 	 * \return 1 if the operation was successful or PROS_ERR if the operation
 	 * failed, setting errno.
 	 */
-	[[deprecated("Changing these values is not supported by VEX and may lead to permanent motor damage.")]] 
-	virtual std::int32_t set_vel_pid_full(const motor_pid_full_s_t pid) const;
+	[[deprecated(
+	    "Changing these values is not supported by VEX and may lead to permanent motor damage.")]] virtual std::int32_t
+	set_vel_pid_full(const motor_pid_full_s_t pid) const;
 
 	///@}
 
@@ -1371,7 +1364,7 @@ class Motor {
 	mutable motor_gearset_e_t _gearset;
 	mutable bool _reverse;
 	mutable motor_encoder_units_e_t _encoder_units;
-    mutable mutex_t _motor_mutex = pros::c::mutex_create();
+	mutable mutex_t _motor_mutex = pros::c::mutex_create();
 };
 
 ///@}
