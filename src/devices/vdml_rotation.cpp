@@ -11,19 +11,42 @@
  */
 
 #include "pros/rotation.hpp"
+#include "vdml/vdml.h"
 
-#define push_configuration                                                                   \
-	pros::c::mutex_take(_rotation_mutex, TIMEOUT_MAX);                                         \
-	claim_port_i(_port, E_DEVICE_ROTATION);                                                    \
-	bool _temp_reverse_flag = vexDeviceMotorReverseFlagGet((V5_DeviceT)(device->device_info)); \
-	vexDeviceMotorReverseFlagSet((V5_DeviceT)(device->device_info), _reverse_flag);            \
-	return_port(_port, 1);
+#include "v5_api.h"
 
-#define pop_configuration                                                              \
-	claim_port_i(_port, E_DEVICE_ROTATION);                                              \
-	vexDeviceMotorReverseFlagSet((V5_DeviceT)(device->device_info), _temp_reverse_flag); \
-	return_port(_port, 1);                                                               \
-	pros::c::mutex_give(_rotation_mutex);
+// Here are some important notes about the following macros and precautions if these ever
+// need modified in the futre:
+//  1) The claim_port_i() creates a local variable called "device". This was an issue in
+//     these macros because both push and pop configuration call claim_port_i(). This is
+//     why most of the macros' code is surrounded by { }. Since "device" is not needed
+//     outside of the macros, putting the macro in a new scope fixes the redefinition
+//     errors generated
+//  2) The _temp_reverse_flag is defined outside of the scope because it is used in both
+//     of the macros. Any variables that need to be shared between macros need to be
+//     defined outside of the private scopes
+//  3) If the code ever changes such that both macros need to access "device", it is
+//     probably best to define another "v5_smart_device_s_t*" outside the scope in
+//     push_configuration, set it equal to "device" in the private scope for the push
+//     macro, and then reference it in the pop macro. 
+#define push_configuration                                                          \
+    bool _temp_reverse_flag;                                                        \
+	{                                                                               \
+    pros::c::mutex_take(_rotation_mutex, TIMEOUT_MAX);                              \
+	claim_port_i(_port, pros::c::E_DEVICE_ROTATION);                                \
+	_temp_reverse_flag =                                                            \
+        vexDeviceMotorReverseFlagGet((V5_DeviceT)(device->device_info));            \
+	vexDeviceMotorReverseFlagSet((V5_DeviceT)(device->device_info), _reverse_flag); \
+	return_port(_port, 1);                                                          \
+    }
+
+#define pop_configuration                                                               \
+    {                                                                                   \
+	claim_port_i(_port, pros::c::E_DEVICE_ROTATION);                                    \
+	vexDeviceMotorReverseFlagSet((V5_DeviceT)(device->device_info), _temp_reverse_flag);\
+	return_port(_port, 1);                                                              \
+	pros::c::mutex_give(_rotation_mutex);                                               \
+    }
 
 namespace pros {
 inline namespace v5 {
@@ -85,7 +108,7 @@ std::int32_t Rotation::get_angle(void) {
 std::int32_t Rotation::set_reversed(bool value) {
 	_reverse_flag = value;
 	push_configuration;
-	std::int32_t rtn = pros::c::rotation_set_reversed(_port);
+	std::int32_t rtn = pros::c::rotation_set_reversed(_port, value);
 	pop_configuration;
 	return rtn;
 }
@@ -99,7 +122,7 @@ std::int32_t Rotation::reverse(void) {
 
 std::int32_t Rotation::get_reversed(void) {
 	push_configuration;
-	std::int32_t rtn = pros::c::rotation_get_reverse(_port);
+	std::int32_t rtn = pros::c::rotation_get_reversed(_port);
 	pop_configuration;
 	return rtn;
 }

@@ -15,7 +15,7 @@
 #include "vdml/vdml.h"
 
 #define push_configuration                                                                                          \
-	claim_port_i(_port, E_DEVICE_MOTOR);                                                                              \
+	claim_port_i(_port, pros::c::E_DEVICE_MOTOR);                                                                              \
 	motor_gearset_e_t _temp_gearset = (motor_gearset_e_t)vexDeviceMotorGearingGet((V5_DeviceT)(device->device_info)); \
 	bool _temp_reverse = vexDeviceMotorReverseFlagGet((V5_DeviceT)(device->device_info));                             \
 	motor_encoder_units_e_t _temp_encoder_units =                                                                     \
@@ -26,7 +26,7 @@
 	return_port(_port, 1);
 
 #define pop_configuration                                                                                     \
-	claim_port_i(_port, E_DEVICE_MOTOR);                                                                        \
+	claim_port_i(_port, pros::c::E_DEVICE_MOTOR);                                                               \
 	vexDeviceMotorGearingSet((V5_DeviceT)(device->device_info), (V5MotorGearset)_temp_gearset);                 \
 	vexDeviceMotorReverseFlagSet((V5_DeviceT)(device->device_info), _temp_reverse);                             \
 	vexDeviceMotorEncoderUnitsSet((V5_DeviceT)(device->device_info), (V5MotorEncoderUnits)_temp_encoder_units); \
