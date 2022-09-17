@@ -1358,12 +1358,22 @@ class Motor {
 	set_vel_pid_full(const motor_pid_full_s_t pid) const;
 
 	///@}
+    
+    virtual int push_configuration(void) const;
+    virtual int pop_configuration(void) const;
+    typedef struct {
+        motor_gearset_e_t gearset;
+        bool reverse;
+        motor_encoder_units_e_t encoder_units;
+    } temp_motor_values;
+
 
 	private:
 	const std::uint8_t _port;
 	mutable motor_gearset_e_t _gearset;
 	mutable bool _reverse;
 	mutable motor_encoder_units_e_t _encoder_units;
+    mutable temp_motor_values _temp_motor_values;
 	mutable mutex_t _motor_mutex = pros::c::mutex_create();
 };
 
