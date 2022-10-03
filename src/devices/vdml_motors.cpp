@@ -13,6 +13,7 @@
 #include "kapi.h"
 #include "pros/motors.hpp"
 #include "vdml/vdml.h"
+#include "pros/rtos.h"
 
 namespace pros {
 inline namespace v5 {
@@ -404,19 +405,22 @@ int Motor::push_configuration() const {
 	_temp_motor_values.reverse = vexDeviceMotorReverseFlagGet((V5_DeviceT)(device->device_info));
 	_temp_motor_values.encoder_units =
 	    (motor_encoder_units_e_t)vexDeviceMotorEncoderUnitsGet((V5_DeviceT)(device->device_info));
+	_motor_mutex.take();
 	vexDeviceMotorGearingSet((V5_DeviceT)(device->device_info), (V5MotorGearset)_gearset);
 	vexDeviceMotorReverseFlagSet((V5_DeviceT)(device->device_info), _reverse);
 	vexDeviceMotorEncoderUnitsSet((V5_DeviceT)(device->device_info), (V5MotorEncoderUnits)_encoder_units);
+	_motor_mutex.give();
 	return_port(_port, 1);
 }
 
 int Motor::pop_configuration() const {
 	claim_port_i(_port, pros::c::E_DEVICE_MOTOR);
+	_motor_mutex.take();
 	vexDeviceMotorGearingSet((V5_DeviceT)(device->device_info), (V5MotorGearset)_temp_motor_values.gearset);
 	vexDeviceMotorReverseFlagSet((V5_DeviceT)(device->device_info), _temp_motor_values.reverse);
 	vexDeviceMotorEncoderUnitsSet((V5_DeviceT)(device->device_info), (V5MotorEncoderUnits)_temp_motor_values.encoder_units);
+	_motor_mutex.give();
 	return_port(_port, 1);
-	pros::c::mutex_give(_motor_mutex);
 }
 
 namespace literals {

@@ -27,7 +27,7 @@
 
 #include "kapi.h"
 #include "pros/motors.h"
-#include "rtos.h"
+#include "rtos.hpp"
 
 namespace pros {
 inline namespace v5 {
@@ -1374,7 +1374,7 @@ class Motor {
 	mutable bool _reverse;
 	mutable motor_encoder_units_e_t _encoder_units;
     mutable temp_motor_values _temp_motor_values;
-	mutable mutex_t _motor_mutex = pros::c::mutex_create();
+	mutable pros::Mutex _motor_mutex;
 };
 
 ///@}
