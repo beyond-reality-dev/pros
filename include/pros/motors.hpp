@@ -1360,7 +1360,7 @@ class Motor {
 	///@}
     
     virtual int push_configuration(void) const;
-    virtual int pop_configuration(void) const;
+    // virtual int pop_configuration(void) const;
     typedef struct {
         motor_gearset_e_t gearset;
         bool reverse;
