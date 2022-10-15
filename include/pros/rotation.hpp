@@ -26,7 +26,7 @@
 #include "kapi.h"
 #include "pros/apix.h"
 #include "pros/rotation.h"
-#include "rtos.h"
+#include "rtos.hpp"
 
 namespace pros {
 inline namespace v5 {
@@ -170,7 +170,7 @@ class Rotation {
 	 * \return 1 if the operation was successful or PROS_ERR if the operation
 	 * failed, setting errno.
 	 */
-	virtual std::int32_t set_reversed(bool value);
+	virtual std::int32_t set_reversed(bool value) const;
 
 	/**
 	 * Reverse the Rotation Sensor's direction.
@@ -198,10 +198,12 @@ class Rotation {
 	 */
 	virtual std::int32_t get_reversed();
 	///@}
+
 	private:
 	const std::uint8_t _port;
 	mutable bool _reverse_flag;
-	mutable mutex_t _rotation_mutex = pros::c::mutex_create();
+	mutable pros::Mutex _rotation_mutex;
+    virtual void push_rotation_configuration(void) const;
 };
 }  // namespace v5
 }  // namespace pros

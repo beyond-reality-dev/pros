@@ -1359,22 +1359,14 @@ class Motor {
 
 	///@}
     
-    virtual int push_configuration(void) const;
-    // virtual int pop_configuration(void) const;
-    typedef struct {
-        motor_gearset_e_t gearset;
-        bool reverse;
-        motor_encoder_units_e_t encoder_units;
-    } temp_motor_values;
-
 
 	private:
 	const std::uint8_t _port;
 	mutable motor_gearset_e_t _gearset;
 	mutable bool _reverse;
 	mutable motor_encoder_units_e_t _encoder_units;
-    mutable temp_motor_values _temp_motor_values;
 	mutable pros::Mutex _motor_mutex;
+    virtual void push_motor_configuration(void) const;
 };
 
 ///@}
