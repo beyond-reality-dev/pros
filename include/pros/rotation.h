@@ -361,7 +361,7 @@ int32_t rotation_init_reverse(uint8_t port, bool reverse_flag);
  *   while (true) {
  * 
  *     if(controller_get_digital(CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_X)){
- *       rotation_get_reversed(ROTATION_PORT);
+ *       rotation_is_reversed(ROTATION_PORT);
  *     }
  *   delay(20);
  *   }

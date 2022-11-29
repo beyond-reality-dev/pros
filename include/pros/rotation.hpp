@@ -196,7 +196,7 @@ class Rotation {
 	 * \return Reversed value or PROS_ERR if the operation failed, setting
 	 * errno.
 	 */
-	virtual std::int32_t get_reversed() const;
+	virtual std::int32_t is_reversed() const;
 	///@}
 
 	/**
