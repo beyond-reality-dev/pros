@@ -13,6 +13,7 @@
 #include "pros/optical.hpp"
 
 namespace pros {
+inline namespace v5 {
 using namespace pros::c;
 
 Optical::Optical(std::uint8_t port): _port(port){}
@@ -68,4 +69,19 @@ std::int32_t Optical::disable_gesture(){
 std::uint8_t Optical::get_port(){
   return _port;
 }
+
+std::ostream& operator<<(std::ostream& os, pros::Optical& optical) {
+  pros::c::optical_rgb_s_t rgb = optical.get_rgb(); 
+  os << "Optical [";
+  os << "port: " << optical.get_port();
+  os << ", hue: " << optical.get_hue();
+  os << ", saturation: " << optical.get_saturation();
+  os << ", brightness: " << optical.get_brightness();
+  os << ", proximity: " << optical.get_proximity();
+  os << ", rgb: " << "{" << rgb.red << ","<< rgb.green << "," << rgb.blue << "}"; 
+  os << "]";
+  return os;
 }
+
+} // namespace v5
+} // namespace pros

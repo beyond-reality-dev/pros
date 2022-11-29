@@ -1,5 +1,6 @@
 /**
  * \file pros/rotation.hpp
+ * \ingroup cpp-rotation
  *
  * Contains prototypes for functions related to the VEX Rotation Sensor.
  *
@@ -9,22 +10,33 @@
  * This file should not be modified by users, since it gets replaced whenever
  * a kernel upgrade occurs.
  *
- * Copyright (c) 2017-2022, Purdue University ACM SIGBots.
+ * \copyright (c) 2017-2022, Purdue University ACM SIGBots.
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * 
+ * \defgroup cpp-rotation VEX Rotation Sensor C++ API
  */
 #ifndef _PROS_ROTATION_HPP_
 #define _PROS_ROTATION_HPP_
 
 #include <cstdint>
+#include <iostream>
 
 #include "pros/encoder.hpp"
 #include "pros/rotation.h"
 
 namespace pros {
-class Rotation : Encoder {
+inline namespace v5 {
+/**
+ * \addtogroup cpp-rotation
+ */
+class Rotation {
+	/**
+	 * \ingroup cpp-rotation
+	 *  @{
+	 */
 	const std::uint8_t _port;
 
 	public:
@@ -84,7 +96,7 @@ class Rotation : Encoder {
 	 * \return 1 if the operation was successful or PROS_ERR if the operation
 	 * failed, setting errno.
 	 */
-	virtual std::int32_t set_position(std::uint32_t position);
+	virtual std::int32_t set_position(std::uint32_t position) const;
 
 	/**
 	 * Reset the Rotation Sensor to a desired rotation value
@@ -99,7 +111,7 @@ class Rotation : Encoder {
 	 * \return 1 if the operation was successful or PROS_ERR if the operation
 	 * failed, setting errno.
 	 */
-	virtual std::int32_t reset_position(void);
+	virtual std::int32_t reset_position(void) const;
 
 	/**
 	 * Get the Rotation Sensor's current position in centidegrees
@@ -112,7 +124,7 @@ class Rotation : Encoder {
 	 * \return The position value or PROS_ERR if the operation failed, setting
 	 * errno.
 	 */
-	virtual std::int32_t get_position();
+	virtual std::int32_t get_position() const;
 
 	/**
 	 * Get the Rotation Sensor's current velocity in centidegrees per second
@@ -128,7 +140,7 @@ class Rotation : Encoder {
 	 value or PROS_ERR_F if the operation failed, setting
 	 * errno.
 	 */
-	virtual std::int32_t get_velocity();
+	virtual std::int32_t get_velocity() const;
 
 	/**
 	 * Get the Rotation Sensor's current position in centidegrees
@@ -141,7 +153,7 @@ class Rotation : Encoder {
 	 * \return The angle value or PROS_ERR if the operation failed, setting
 	 * errno.
 	 */
-	virtual std::int32_t get_angle();
+	virtual std::int32_t get_angle() const;
 
 	/**
 	 * Set the Rotation Sensor's direction reversed flag
@@ -158,7 +170,7 @@ class Rotation : Encoder {
 	 * \return 1 if the operation was successful or PROS_ERR if the operation
 	 * failed, setting errno.
 	 */
-	virtual std::int32_t set_reversed(bool value);
+	virtual std::int32_t set_reversed(bool value) const;
 
 	/**
 	 * Reverse the Rotation Sensor's direction.
@@ -171,7 +183,7 @@ class Rotation : Encoder {
 	 * \return 1 if the operation was successful or PROS_ERR if the operation
 	 * failed, setting errno.
 	 */
-	virtual std::int32_t reverse();
+	virtual std::int32_t reverse() const;
 
 	/**
 	 * Get the Rotation Sensor's reversed flag
@@ -184,8 +196,19 @@ class Rotation : Encoder {
 	 * \return Reversed value or PROS_ERR if the operation failed, setting
 	 * errno.
 	 */
-	virtual std::int32_t is_reversed();
+	virtual std::int32_t get_reversed() const;
+	///@}
+
+	/**
+	 * This is the overload for the << operator for printing to streams
+	 * 
+	 * Prints in format(this below is all in one line with no new line):
+	 * Rotation [port: rotation._port, position: (rotation position), velocity: (rotation velocity), 
+	 * angle: (rotation angle), reversed: (reversed boolean)]
+	 */
+	friend std::ostream& operator<<(std::ostream& os, const pros::Rotation& rotation);
 };
+}
 }  // namespace pros
 
 #endif
