@@ -32,7 +32,7 @@ inline namespace v5 {
 /**
  * \addtogroup cpp-rotation
  */
-class Rotation {
+class Rotation : Encoder {
 	/**
 	 * \ingroup cpp-rotation
 	 *  @{

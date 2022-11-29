@@ -60,7 +60,6 @@
 #include "pros/rotation.h"
 #include "pros/screen.h"
 #include "pros/vision.h"
-#include "pros/encoder.h"
 
 #ifdef __cplusplus
 #include "pros/adi.hpp"

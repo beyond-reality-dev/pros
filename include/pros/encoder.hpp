@@ -24,8 +24,6 @@
 #include <cstdint>
 #include <iostream>
 
-#include "pros/encoder.h"
-
 namespace pros {
 inline namespace v5 {
 /**

@@ -95,7 +95,7 @@ using Motor_Gear = Motor_Gears;
 /**
  * \ingroup cpp-motors
  */
-class Motor {
+class Motor : Encoder {
 	/**
 	 * \addtogroup cpp-motors
 	 *  @{
