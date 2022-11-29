@@ -20,10 +20,11 @@
 
 #include <cstdint>
 
+#include "pros/encoder.hpp"
 #include "pros/rotation.h"
 
 namespace pros {
-class Rotation {
+class Rotation : Encoder {
 	const std::uint8_t _port;
 
 	public:
@@ -183,7 +184,7 @@ class Rotation {
 	 * \return Reversed value or PROS_ERR if the operation failed, setting
 	 * errno.
 	 */
-	virtual std::int32_t get_reversed();
+	virtual std::int32_t is_reversed();
 };
 }  // namespace pros
 

@@ -212,7 +212,7 @@ int32_t rotation_init_reverse(uint8_t port, bool reverse_flag);
  * \return Boolean value of if the Rotation Sensor's direction is reversed or not
  * or PROS_ERR if the operation failed, setting errno.
  */
-int32_t rotation_get_reversed(uint8_t port);
+int32_t rotation_is_reversed(uint8_t port);
 
 #ifdef __cplusplus
 } //namespace C

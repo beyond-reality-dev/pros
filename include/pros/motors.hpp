@@ -23,11 +23,12 @@
 #include <initializer_list>
 #include <vector>
 
+#include "pros/encoder.hpp"
 #include "pros/motors.h"
 #include "pros/rtos.hpp"
 
 namespace pros {
-class Motor {
+class Motor : Encoder {
 	public:
 	/**
 	 * Creates a Motor object for the given port and specifications.

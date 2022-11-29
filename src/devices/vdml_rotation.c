@@ -101,7 +101,7 @@ int32_t rotation_reverse(uint8_t port){
 	return_port(port - 1, PROS_SUCCESS);
 }
 
-int32_t rotation_get_reversed(uint8_t port) {
+int32_t rotation_is_reversed(uint8_t port) {
 	claim_port_i(port - 1, E_DEVICE_ROTATION);
 	int32_t rtn = vexDeviceAbsEncReverseFlagGet(device->device_info);
 	return_port(port - 1, rtn);

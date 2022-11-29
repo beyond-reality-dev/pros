@@ -54,8 +54,8 @@ std::int32_t Rotation::reverse(void) {
     return pros::c::rotation_reverse(_port);
 }
 
-std::int32_t Rotation::get_reversed(void) {
-    return pros::c::rotation_get_reversed(_port);
+std::int32_t Rotation::is_reversed(void) {
+    return pros::c::rotation_is_reversed(_port);
 }
 
 }  // namespace pros
