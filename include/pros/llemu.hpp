@@ -30,6 +30,11 @@
 
 namespace pros {
 namespace lcd {
+enum class Text_Align {
+	TEXT_ALIGN_LEFT = 0,
+	TEXT_ALIGN_CENTER = 1,
+	TEXT_ALIGN_RIGHT = 2
+};
 /**
  * Checks whether the emulated three-button LCD has already been initialized.
  *
@@ -255,6 +260,18 @@ void set_text_color(lv_color_t color);
  * \return void
  */
 void set_text_color(std::uint8_t r, std::uint8_t g, std::uint8_t b);
+/**
+ * Changes the alignment of text on the LCD background
+ * 
+ * \param alignment
+ * 		An enum specifying the alignment. Available alignments are:
+ * 			TEXT_ALIGN_LEFT
+ * 			TEXT_ALIGN_RIGHT
+ * 			TEXT_ALIGN_CENTER
+ * 
+ * \return void
+ */
+void set_text_align(Text_Align alignment);
 
 }  // namespace lcd
 }  // namespace pros
